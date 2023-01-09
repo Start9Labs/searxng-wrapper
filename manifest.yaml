@@ -4,6 +4,7 @@ version: 1.0.0.1
 release-notes: | 
   * Optimized icon size and alignment
   * Branding back to just SearXNG
+  * Stop/Restart fix
 license: mit
 wrapper-repo: "https://github.com/Start9Labs/searxng-wrapper"
 upstream-repo: "https://github.com/searxng/searxng-docker"

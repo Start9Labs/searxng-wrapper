@@ -1,6 +1,12 @@
 #!/bin/bash
 
-set -e
+set -ea
+
+_term() { 
+  echo "Caught TERM signal!" 
+  kill -TERM "$redis_process" 2>/dev/null
+  kill -TERM "$searxng_process" 2>/dev/null
+}
 
 # Configuring SearXNG
 echo 'Configuring SearXNG...'
@@ -35,6 +41,11 @@ echo 'data:' >> /root/start9/stats.yaml
 # Initializing Database
 echo 'Starting Redis...'
 redis-server --save "" --appendonly "no" &
+redis_process=$!
 
 # Starting SearXNG
-exec tini /usr/local/searxng/dockerfiles/docker-entrypoint.sh
+sh /usr/local/searxng/dockerfiles/docker-entrypoint.sh &
+searxng_process=$!
+
+trap _term TERM
+wait $redis_process $searxng_process
